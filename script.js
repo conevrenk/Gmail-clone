@@ -1,6 +1,12 @@
 //!import(diğer js dosyasında başka bir js veri aktarımı)
-import { mailData } from "./constants.js"
+import { months } from "./constants.js"
 import { renderMails, showModal } from "./ui.js";
+// localstorage dan veri alma
+const strMailData = localStorage.getItem("data");
+const mailData = JSON.parse(strMailData);
+// gelen string veriyi obje ve dizileri çevirme
+console.log(mailData)
+
 //! html den gelenler
 const hamburgerMenu = document.querySelector(".menu");
 const navigation = document.querySelector("nav")
@@ -32,6 +38,19 @@ function handleMenu() {
      */
    navigation.classList.toggle("hide")
 }
+
+function getDate() {
+  // bügünün tarihini alma
+  const dateArr = new Date().toLocaleDateString().split('/');
+  // tarih dizisinden günü alma
+  const day = dateArr[0];
+  // tarih dizisinde kaçıncı ayda oldugumuz bilgisini alma
+  const monthNumber = dateArr[1];
+  // ayın sırasına karşılık gelen ismi tanımla
+  const month = months[monthNumber - 1];
+  // fonk çağırıldıgı yere gönderilecek cevap
+  return day + ' ' + month;
+}
 function sendMail(e) {
   // sayfanın yenilenmesini engelleme
   e.preventDefault();
@@ -46,10 +65,30 @@ function sendMail(e) {
     receiver,
     title,
     message,
-    date:"may 19",
-  }
+    date: getDate(),
+  };
+  // oluşturdugumuz objeyi dizinin başına ekleme
+  mailData.unshift(newMail);
+  
+  // veritabanını (localstorage) güncelle
+  // veriyi storage göndermek için stringe ceviriyoruz
+  const strData = JSON.stringify(mailData);
+// storage gönderme işlemi.
+  localStorage.setItem("data", strData);
+  console.log(JSON.stringify(mailData));
+  // ekranı güncelle
+  renderMails(mailsArea, mailData);
 
+  // modalı kapatma
+  showModal(modal, false);
+  // modalı temizle
+  e.target[0].value = " ";
+  e.target[1].value = " ";
+  e.target[2].value = " ";
 }
+
+
+
 
 
 

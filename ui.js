@@ -14,6 +14,7 @@ function trimString(str, max) {
 // outlet :ekrana hangi kısmına mudahele edilecek
 // data :hangi verileri ekrana basıcaz
 export function renderMails(outlet, data) {
+  if (!data) return;
     console.log(outlet, data);
     // herbir mail objesi için bir maili temsil eden html oluştur
     outlet.innerHTML = data.map((mail) => `
@@ -35,7 +36,7 @@ export function renderMails(outlet, data) {
           </div>
      `
     ).join(" ")
-  console.log(mailler)
+  
 }
 // ekrana mail oluşturma penceresi açıcak fonk.
 
